@@ -17,8 +17,55 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
-      title: 'Image Picker Demo',
-      home: MyHomePage(title: 'Image Picker Example'),
+      title: 'SCRAPYBOOK',
+      home: MyScrap(),
+      // home: MyHomePage(title: 'Image Picker Example'),
+    );
+  }
+}
+
+class MyScrap extends StatefulWidget {
+  const MyScrap({super.key});
+
+  @override
+  State<MyScrap> createState() => _MyScrapState();
+}
+
+class _MyScrapState extends State<MyScrap> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("MyScrap"),
+        backgroundColor: Color.fromARGB(255, 155, 77, 0),
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Container(
+              margin: const EdgeInsets.all(10),
+              child: ElevatedButton(
+                // To styling button
+                // style: ButtonStyle(
+                //     foregroundColor: MaterialStateProperty.resolveWith(
+                //         (states) => Colors.white),
+                //     backgroundColor: MaterialStateProperty.resolveWith(
+                //         (states) => Colors.amber)),
+                child: const Text("Coba Fitur Image Picker!"),
+                onPressed: () {
+                  Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          const MyHomePage(title: "Image Picker"),
+                    ),
+                  );
+                },
+              ),
+            )
+          ],
+        ),
+      ),
     );
   }
 }
