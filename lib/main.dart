@@ -37,7 +37,7 @@ class _MyScrapState extends State<MyScrap> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("MyScrap"),
-        backgroundColor: Color.fromARGB(255, 155, 77, 0),
+        backgroundColor: const Color.fromARGB(255, 155, 77, 0),
       ),
       body: Center(
         child: Column(
@@ -54,7 +54,7 @@ class _MyScrapState extends State<MyScrap> {
                 //         (states) => Colors.amber)),
                 child: const Text("Coba Fitur Image Picker!"),
                 onPressed: () {
-                  Navigator.of(context).pushReplacement(
+                  Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (context) =>
                           const MyHomePage(title: "Image Picker"),
@@ -62,7 +62,7 @@ class _MyScrapState extends State<MyScrap> {
                   );
                 },
               ),
-            )
+            ),
           ],
         ),
       ),
