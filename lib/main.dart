@@ -5,7 +5,8 @@
 // ignore_for_file: public_member_api_docs
 
 import 'package:flutter/material.dart';
-import 'package:flutter_rootproject/feature_image_picker/my_home_page.dart';
+import 'package:flutter_rootproject/child_class/coba_image_picker.dart';
+import 'package:flutter_rootproject/child_class/coba_save_to_gallery.dart';
 
 void main() {
   runApp(const MyApp());
@@ -39,30 +40,12 @@ class _MyScrapState extends State<MyScrap> {
         title: const Text("MyScrap"),
         backgroundColor: const Color.fromARGB(255, 155, 77, 0),
       ),
-      body: Center(
+      body: const Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Container(
-              margin: const EdgeInsets.all(10),
-              child: ElevatedButton(
-                // To styling button
-                // style: ButtonStyle(
-                //     foregroundColor: MaterialStateProperty.resolveWith(
-                //         (states) => Colors.white),
-                //     backgroundColor: MaterialStateProperty.resolveWith(
-                //         (states) => Colors.amber)),
-                child: const Text("Coba Fitur Image Picker!"),
-                onPressed: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) =>
-                          const MyHomePage(title: "Image Picker"),
-                    ),
-                  );
-                },
-              ),
-            ),
+            CobaImagePicker(),
+            CobaSaveToGallery(),
           ],
         ),
       ),
