@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
     return const MaterialApp(
       title: 'SCRAPYBOOK',
       home: MyScrap(),
-      // home: MyHomePage(title: 'Image Picker Example'),
+      // home: MyImagePicker(title: 'Image Picker Example'),
     );
   }
 }

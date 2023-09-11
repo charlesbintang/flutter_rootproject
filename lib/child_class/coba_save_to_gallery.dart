@@ -25,7 +25,7 @@ class CobaSaveToGallery extends StatelessWidget {
         onPressed: () {
           Navigator.of(context).push(
             MaterialPageRoute(
-              builder: (context) => const MyHomePage(title: "Image Picker"),
+              builder: (context) => const MyImagePicker(title: "Image Picker"),
             ),
           );
         },

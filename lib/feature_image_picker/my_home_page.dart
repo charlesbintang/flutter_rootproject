@@ -10,16 +10,16 @@ import 'package:image_picker/image_picker.dart';
 import 'package:mime/mime.dart';
 import 'package:video_player/video_player.dart';
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, this.title});
+class MyImagePicker extends StatefulWidget {
+  const MyImagePicker({super.key, this.title});
 
   final String? title;
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<MyImagePicker> createState() => _MyImagePickerState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _MyImagePickerState extends State<MyImagePicker> {
   List<XFile>? _mediaFileList;
 
   void _setImageFileListFromFile(XFile? value) {
