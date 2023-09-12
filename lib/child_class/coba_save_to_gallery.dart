@@ -3,7 +3,7 @@
 // found in the LICENSE file.
 
 import 'package:flutter/material.dart';
-import 'package:flutter_rootproject/feature_image_picker/my_home_page.dart';
+import 'package:flutter_rootproject/feature_save_to_gallery/my_save_to_gallery.dart';
 
 class CobaSaveToGallery extends StatelessWidget {
   const CobaSaveToGallery({
@@ -21,11 +21,11 @@ class CobaSaveToGallery extends StatelessWidget {
         //         (states) => Colors.white),
         //     backgroundColor: MaterialStateProperty.resolveWith(
         //         (states) => Colors.amber)),
-        child: const Text("Coba Fitur Image Picker!"),
+        child: const Text("Coba Fitur Save To Gallery!"),
         onPressed: () {
           Navigator.of(context).push(
             MaterialPageRoute(
-              builder: (context) => const MyImagePicker(title: "Image Picker"),
+              builder: (context) => const MySaveToGallery(),
             ),
           );
         },

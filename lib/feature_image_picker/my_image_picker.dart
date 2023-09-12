@@ -11,9 +11,7 @@ import 'package:mime/mime.dart';
 import 'package:video_player/video_player.dart';
 
 class MyImagePicker extends StatefulWidget {
-  const MyImagePicker({super.key, this.title});
-
-  final String? title;
+  const MyImagePicker({super.key});
 
   @override
   State<MyImagePicker> createState() => _MyImagePickerState();
@@ -286,7 +284,7 @@ class _MyImagePickerState extends State<MyImagePicker> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title!),
+        title: const Text("Image Picker"),
       ),
       body: Center(
         child: !kIsWeb && defaultTargetPlatform == TargetPlatform.android
