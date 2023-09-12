@@ -1,10 +1,7 @@
-// Copyright 2013 The Flutter Authors. All rights reserved.
-// Use of this source code is governed by a BSD-style license that can be
-// found in the LICENSE file.
-
 // ignore_for_file: public_member_api_docs
 
 import 'package:flutter/material.dart';
+import 'package:flutter_rootproject/child_class/coba_artboard.dart';
 import 'package:flutter_rootproject/child_class/coba_image_picker.dart';
 import 'package:flutter_rootproject/child_class/coba_save_to_gallery.dart';
 
@@ -17,10 +14,13 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       title: 'SCRAPYBOOK',
-      home: MyScrap(),
-      // home: MyImagePicker(title: 'Image Picker Example'),
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.orange),
+        useMaterial3: true,
+      ),
+      home: const MyScrap(),
     );
   }
 }
@@ -37,8 +37,8 @@ class _MyScrapState extends State<MyScrap> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: const Text("MyScrap"),
-        backgroundColor: const Color.fromARGB(255, 155, 77, 0),
       ),
       body: const Center(
         child: Column(
@@ -46,6 +46,7 @@ class _MyScrapState extends State<MyScrap> {
           children: <Widget>[
             CobaImagePicker(),
             CobaSaveToGallery(),
+            CobaArtboard(),
           ],
         ),
       ),
