@@ -1,5 +1,7 @@
 // ignore_for_file: unused_import, use_build_context_synchronously
 
+import 'dart:math';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:gallery_saver/gallery_saver.dart';
@@ -14,6 +16,8 @@ class MySaveToGallery extends StatefulWidget {
 }
 
 class _MySaveToGalleryState extends State<MySaveToGallery> {
+  bool showButton = false;
+  String url = 'https://picsum.photos/id/17/2500/1667';
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,37 +37,57 @@ class _MySaveToGalleryState extends State<MySaveToGallery> {
       body: Center(
         child: Column(
           children: <Widget>[
-            Image.network(
-              // 'https://picsum.photos/250?image=9',
-              'https://picsum.photos/id/13/2500/1667',
-              height: 350,
-              width: double.infinity,
-              fit: BoxFit.cover,
-            ),
             Container(
               margin: const EdgeInsets.all(20),
-              child: TextButton(
-                onPressed: () async {
-                  // String url = 'https://picsum.photos/250?image=9';
-                  String url = 'https://picsum.photos/id/13/2500/1667';
-
-                  final tempDir = await getTemporaryDirectory();
-                  final path = '${tempDir.path}/image.jpg';
-
-                  await Dio().download(url, path);
-                  await GallerySaver.saveImage(path);
-                  ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text("Download to Gallery!")));
+              child: Image.network(
+                url,
+                loadingBuilder: (BuildContext context, Widget child,
+                    ImageChunkEvent? loadingProgress) {
+                  if (loadingProgress == null) {
+                    // Setelah foto berhasil dimuat, tampilkan tombol setelah 1 detik.
+                    Future.delayed(const Duration(seconds: 3), () {
+                      if (mounted) {
+                        setState(() {
+                          showButton = true;
+                        });
+                      }
+                    });
+                    return child;
+                  }
+                  return Center(
+                    child: CircularProgressIndicator(
+                      value: loadingProgress.expectedTotalBytes != null
+                          ? loadingProgress.cumulativeBytesLoaded /
+                              loadingProgress.expectedTotalBytes!
+                          : null,
+                    ),
+                  );
                 },
-                style: const ButtonStyle(
-                  overlayColor: MaterialStatePropertyAll(Colors.amber),
-                  backgroundColor: MaterialStatePropertyAll(Colors.blue),
-                  padding: MaterialStatePropertyAll(EdgeInsets.all(15)),
-                ),
-                child: const Text("DOWNLOAD THE IMAGE",
-                    style: TextStyle(color: Colors.white)),
               ),
             ),
+            if (showButton)
+              Container(
+                margin: const EdgeInsets.all(10),
+                child: TextButton(
+                  onPressed: () async {
+                    // String url = 'https://picsum.photos/250?image=9';
+                    final tempDir = await getTemporaryDirectory();
+                    final path = '${tempDir.path}/image.jpg';
+
+                    await Dio().download(url, path);
+                    await GallerySaver.saveImage(path);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text("Download to Gallery!")));
+                  },
+                  style: const ButtonStyle(
+                    overlayColor: MaterialStatePropertyAll(Colors.amber),
+                    backgroundColor: MaterialStatePropertyAll(Colors.blue),
+                    padding: MaterialStatePropertyAll(EdgeInsets.all(15)),
+                  ),
+                  child: const Text("DOWNLOAD THE IMAGE",
+                      style: TextStyle(color: Colors.white)),
+                ),
+              ),
           ],
         ),
       ),
