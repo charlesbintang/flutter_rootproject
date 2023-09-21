@@ -16,8 +16,8 @@ class MySaveToGallery extends StatefulWidget {
 }
 
 class _MySaveToGalleryState extends State<MySaveToGallery> {
-  bool showButton = false;
-  String url = 'https://picsum.photos/id/17/2500/1667';
+  bool showButton = true;
+  String url = 'https://picsum.photos/id/25/5000/3333';
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -45,13 +45,6 @@ class _MySaveToGalleryState extends State<MySaveToGallery> {
                     ImageChunkEvent? loadingProgress) {
                   if (loadingProgress == null) {
                     // Setelah foto berhasil dimuat, tampilkan tombol setelah 1 detik.
-                    Future.delayed(const Duration(seconds: 3), () {
-                      if (mounted) {
-                        setState(() {
-                          showButton = true;
-                        });
-                      }
-                    });
                     return child;
                   }
                   return Center(
