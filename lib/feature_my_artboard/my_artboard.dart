@@ -12,10 +12,15 @@ class MyArtboard extends StatefulWidget {
 }
 
 class _MyArtboardState extends State<MyArtboard> {
-  File? _selectedImage;
+  File? _selectedImage1;
+  File? _selectedImage2;
 
-  double _top = 0;
-  double _left = 0;
+  double _top1 = 0;
+  double _top2 = 0;
+  double _left1 = 0;
+  double _left2 = 0;
+
+  bool isFilePicked = false;
 
   @override
   Widget build(BuildContext context) {
@@ -25,39 +30,71 @@ class _MyArtboardState extends State<MyArtboard> {
         title: const Text("MyArtboard"),
         centerTitle: true,
       ),
-      body: _selectedImage != null
+      body: isFilePicked == true
           ? Stack(
               children: [
                 Positioned(
-                  top: _top,
-                  left: _left,
+                  top: _top1,
+                  left: _left1,
                   child: GestureDetector(
                     onPanUpdate: (details) {
-                      _top = max(0, _top + details.delta.dy);
-                      _left = max(0, _left + details.delta.dx);
+                      _top1 = max(0, _top1 + details.delta.dy);
+                      _left1 = max(0, _left1 + details.delta.dx);
                       setState(() {});
                     },
-                    child: Image.file(_selectedImage!),
+                    child: Image.file(_selectedImage1!),
                   ),
                 ),
+                if (_selectedImage2 != null)
+                  Positioned(
+                    top: _top2,
+                    left: _left2,
+                    child: GestureDetector(
+                      onPanUpdate: (details) {
+                        _top2 = max(0, _top2 + details.delta.dy);
+                        _left2 = max(0, _left2 + details.delta.dx);
+                        setState(() {});
+                      },
+                      child: Image.file(_selectedImage2!),
+                    ),
+                  )
               ],
             )
           : const SizedBox(),
-      floatingActionButton: ElevatedButton(
-        onPressed: () {
-          _pickImageFromGallery();
-        },
-        child: const Text("Impor gambar"),
-      ),
+      floatingActionButton: Stack(children: [
+        ElevatedButton(
+          onPressed: () {
+            _pickImageFromGallery1();
+          },
+          child: const Text("Impor gambar 1"),
+        ),
+        if (_selectedImage1 != null)
+          ElevatedButton(
+            onPressed: () {
+              _pickImageFromGallery2();
+            },
+            child: const Text("Impor gambar 2"),
+          ),
+      ]),
     );
   }
 
-  Future _pickImageFromGallery() async {
+  Future _pickImageFromGallery1() async {
     final returnedImage =
         await ImagePicker().pickImage(source: ImageSource.gallery);
     if (returnedImage == null) return;
     setState(() {
-      _selectedImage = File(returnedImage.path);
+      _selectedImage1 = File(returnedImage.path);
+      isFilePicked = true;
+    });
+  }
+
+  Future _pickImageFromGallery2() async {
+    final returnedImage =
+        await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (returnedImage == null) return;
+    setState(() {
+      _selectedImage2 = File(returnedImage.path);
     });
   }
 }
