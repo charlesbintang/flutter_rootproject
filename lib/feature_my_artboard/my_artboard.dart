@@ -16,8 +16,8 @@ class _MyArtboardState extends State<MyArtboard> {
   File? _selectedImage2;
 
   double _top1 = 0;
-  double _top2 = 0;
   double _left1 = 0;
+  double _top2 = 0;
   double _left2 = 0;
 
   bool isFilePicked = false;
@@ -62,18 +62,39 @@ class _MyArtboardState extends State<MyArtboard> {
             )
           : const SizedBox(),
       floatingActionButton: Stack(children: [
-        ElevatedButton(
-          onPressed: () {
-            _pickImageFromGallery1();
-          },
-          child: const Text("Impor gambar 1"),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            ElevatedButton(
+              onPressed: () {
+                _pickImageFromGallery1();
+              },
+              child: const Text("Impor gambar 1"),
+            ),
+          ],
         ),
         if (_selectedImage1 != null)
-          ElevatedButton(
-            onPressed: () {
-              _pickImageFromGallery2();
-            },
-            child: const Text("Impor gambar 2"),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              ElevatedButton(
+                onPressed: () {
+                  setState(() {
+                    isFilePicked = false;
+                    _selectedImage1 = null;
+                    _top1 = 0;
+                    _left1 = 0;
+                  });
+                },
+                child: const Text("Hapus"),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  _pickImageFromGallery2();
+                },
+                child: const Text("Impor gambar 2"),
+              ),
+            ],
           ),
       ]),
     );
