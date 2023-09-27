@@ -21,7 +21,10 @@ class _MyArtboardState extends State<MyArtboard> {
   double _left2 = 0;
 
   bool isFilePicked = false;
-  bool isImage1OnTheTop = true;
+  bool isImage1Layer1Visible = true;
+  bool isImage2Layer1Visible = true;
+  bool isImage1Layer2Visible = true;
+  bool isImage2Layer2Visible = true;
 
   @override
   Widget build(BuildContext context) {
@@ -36,18 +39,10 @@ class _MyArtboardState extends State<MyArtboard> {
               clipBehavior: Clip.none,
               children: [
                 Visibility(
-                  visible: false,
-                  replacement: Positioned(
-                    top: _top1,
-                    left: _left1,
-                    child: GestureDetector(
-                      onPanUpdate: (details) {
-                        _top1 = max(0, _top1 + details.delta.dy);
-                        _left1 = max(0, _left1 + details.delta.dx);
-                        setState(() {});
-                      },
-                      child: Image.file(_selectedImage2!),
-                    ),
+                  visible: isImage1Layer1Visible,
+                  replacement: const SizedBox(
+                    height: double.infinity,
+                    width: double.infinity,
                   ),
                   child: Positioned(
                     top: _top1,
@@ -64,8 +59,12 @@ class _MyArtboardState extends State<MyArtboard> {
                 ),
                 if (_selectedImage2 != null)
                   Visibility(
-                    visible: false,
-                    replacement: Positioned(
+                    visible: isImage2Layer1Visible,
+                    replacement: const SizedBox(
+                      height: double.infinity,
+                      width: double.infinity,
+                    ),
+                    child: Positioned(
                       top: _top2,
                       left: _left2,
                       child: GestureDetector(
@@ -74,8 +73,36 @@ class _MyArtboardState extends State<MyArtboard> {
                           _left2 = max(0, _left2 + details.delta.dx);
                           setState(() {});
                         },
+                        child: Image.file(_selectedImage2!),
+                      ),
+                    ),
+                  ),
+                if (_selectedImage2 != null)
+                  Visibility(
+                    visible: isImage1Layer2Visible,
+                    replacement: const SizedBox(
+                      height: double.infinity,
+                      width: double.infinity,
+                    ),
+                    child: Positioned(
+                      top: _top1,
+                      left: _left1,
+                      child: GestureDetector(
+                        onPanUpdate: (details) {
+                          _top1 = max(0, _top1 + details.delta.dy);
+                          _left1 = max(0, _left1 + details.delta.dx);
+                          setState(() {});
+                        },
                         child: Image.file(_selectedImage1!),
                       ),
+                    ),
+                  ),
+                if (_selectedImage2 != null)
+                  Visibility(
+                    visible: isImage2Layer2Visible,
+                    replacement: const SizedBox(
+                      height: double.infinity,
+                      width: double.infinity,
                     ),
                     child: Positioned(
                       top: _top2,
@@ -116,6 +143,7 @@ class _MyArtboardState extends State<MyArtboard> {
                     _selectedImage1 = null;
                     _top1 = 0;
                     _left1 = 0;
+                    // isImage1OnTheTop = !isImage1OnTheTop;
                   });
                 },
                 child: const Text("Hapus"),
