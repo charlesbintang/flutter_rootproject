@@ -21,6 +21,7 @@ class _MyArtboardState extends State<MyArtboard> {
   double _left2 = 0;
 
   bool isFilePicked = false;
+  bool isImage1OnTheTop = true;
 
   @override
   Widget build(BuildContext context) {
@@ -32,30 +33,61 @@ class _MyArtboardState extends State<MyArtboard> {
       ),
       body: isFilePicked == true
           ? Stack(
+              clipBehavior: Clip.none,
               children: [
-                Positioned(
-                  top: _top1,
-                  left: _left1,
-                  child: GestureDetector(
-                    onPanUpdate: (details) {
-                      _top1 = max(0, _top1 + details.delta.dy);
-                      _left1 = max(0, _left1 + details.delta.dx);
-                      setState(() {});
-                    },
-                    child: Image.file(_selectedImage1!),
-                  ),
-                ),
-                if (_selectedImage2 != null)
-                  Positioned(
-                    top: _top2,
-                    left: _left2,
+                Visibility(
+                  visible: false,
+                  replacement: Positioned(
+                    top: _top1,
+                    left: _left1,
                     child: GestureDetector(
                       onPanUpdate: (details) {
-                        _top2 = max(0, _top2 + details.delta.dy);
-                        _left2 = max(0, _left2 + details.delta.dx);
+                        _top1 = max(0, _top1 + details.delta.dy);
+                        _left1 = max(0, _left1 + details.delta.dx);
                         setState(() {});
                       },
                       child: Image.file(_selectedImage2!),
+                    ),
+                  ),
+                  child: Positioned(
+                    top: _top1,
+                    left: _left1,
+                    child: GestureDetector(
+                      onPanUpdate: (details) {
+                        _top1 = max(0, _top1 + details.delta.dy);
+                        _left1 = max(0, _left1 + details.delta.dx);
+                        setState(() {});
+                      },
+                      child: Image.file(_selectedImage1!),
+                    ),
+                  ),
+                ),
+                if (_selectedImage2 != null)
+                  Visibility(
+                    visible: false,
+                    replacement: Positioned(
+                      top: _top2,
+                      left: _left2,
+                      child: GestureDetector(
+                        onPanUpdate: (details) {
+                          _top2 = max(0, _top2 + details.delta.dy);
+                          _left2 = max(0, _left2 + details.delta.dx);
+                          setState(() {});
+                        },
+                        child: Image.file(_selectedImage1!),
+                      ),
+                    ),
+                    child: Positioned(
+                      top: _top2,
+                      left: _left2,
+                      child: GestureDetector(
+                        onPanUpdate: (details) {
+                          _top2 = max(0, _top2 + details.delta.dy);
+                          _left2 = max(0, _left2 + details.delta.dx);
+                          setState(() {});
+                        },
+                        child: Image.file(_selectedImage2!),
+                      ),
                     ),
                   )
               ],
