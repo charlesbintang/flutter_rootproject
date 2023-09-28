@@ -1,8 +1,12 @@
 import 'dart:io';
 import 'dart:math';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:screenshot/screenshot.dart';
 
 class MyArtboard extends StatefulWidget {
   const MyArtboard({Key? key}) : super(key: key);
@@ -12,6 +16,8 @@ class MyArtboard extends StatefulWidget {
 }
 
 class _MyArtboardState extends State<MyArtboard> {
+  ScreenshotController screenshotController = ScreenshotController();
+
   File? _selectedImage1;
   File? _selectedImage2;
 
@@ -35,51 +41,13 @@ class _MyArtboardState extends State<MyArtboard> {
         centerTitle: true,
       ),
       body: isFilePicked == true
-          ? Stack(
-              clipBehavior: Clip.none,
-              children: [
-                Visibility(
-                  visible: isImage1Layer1Visible,
-                  replacement: const SizedBox(
-                    height: double.infinity,
-                    width: double.infinity,
-                  ),
-                  child: Positioned(
-                    top: _top1,
-                    left: _left1,
-                    child: GestureDetector(
-                      onPanUpdate: (details) {
-                        _top1 = max(0, _top1 + details.delta.dy);
-                        _left1 = max(0, _left1 + details.delta.dx);
-                        setState(() {});
-                      },
-                      child: Image.file(_selectedImage1!),
-                    ),
-                  ),
-                ),
-                if (_selectedImage2 != null)
+          ? Screenshot(
+              controller: screenshotController,
+              child: Stack(
+                clipBehavior: Clip.none,
+                children: [
                   Visibility(
-                    visible: isImage2Layer1Visible,
-                    replacement: const SizedBox(
-                      height: double.infinity,
-                      width: double.infinity,
-                    ),
-                    child: Positioned(
-                      top: _top2,
-                      left: _left2,
-                      child: GestureDetector(
-                        onPanUpdate: (details) {
-                          _top2 = max(0, _top2 + details.delta.dy);
-                          _left2 = max(0, _left2 + details.delta.dx);
-                          setState(() {});
-                        },
-                        child: Image.file(_selectedImage2!),
-                      ),
-                    ),
-                  ),
-                if (_selectedImage2 != null)
-                  Visibility(
-                    visible: isImage1Layer2Visible,
+                    visible: isImage1Layer1Visible,
                     replacement: const SizedBox(
                       height: double.infinity,
                       width: double.infinity,
@@ -97,27 +65,68 @@ class _MyArtboardState extends State<MyArtboard> {
                       ),
                     ),
                   ),
-                if (_selectedImage2 != null)
-                  Visibility(
-                    visible: isImage2Layer2Visible,
-                    replacement: const SizedBox(
-                      height: double.infinity,
-                      width: double.infinity,
-                    ),
-                    child: Positioned(
-                      top: _top2,
-                      left: _left2,
-                      child: GestureDetector(
-                        onPanUpdate: (details) {
-                          _top2 = max(0, _top2 + details.delta.dy);
-                          _left2 = max(0, _left2 + details.delta.dx);
-                          setState(() {});
-                        },
-                        child: Image.file(_selectedImage2!),
+                  if (_selectedImage2 != null)
+                    Visibility(
+                      visible: isImage2Layer1Visible,
+                      replacement: const SizedBox(
+                        height: double.infinity,
+                        width: double.infinity,
+                      ),
+                      child: Positioned(
+                        top: _top2,
+                        left: _left2,
+                        child: GestureDetector(
+                          onPanUpdate: (details) {
+                            _top2 = max(0, _top2 + details.delta.dy);
+                            _left2 = max(0, _left2 + details.delta.dx);
+                            setState(() {});
+                          },
+                          child: Image.file(_selectedImage2!),
+                        ),
                       ),
                     ),
-                  )
-              ],
+                  if (_selectedImage2 != null)
+                    Visibility(
+                      visible: isImage1Layer2Visible,
+                      replacement: const SizedBox(
+                        height: double.infinity,
+                        width: double.infinity,
+                      ),
+                      child: Positioned(
+                        top: _top1,
+                        left: _left1,
+                        child: GestureDetector(
+                          onPanUpdate: (details) {
+                            _top1 = max(0, _top1 + details.delta.dy);
+                            _left1 = max(0, _left1 + details.delta.dx);
+                            setState(() {});
+                          },
+                          child: Image.file(_selectedImage1!),
+                        ),
+                      ),
+                    ),
+                  if (_selectedImage2 != null)
+                    Visibility(
+                      visible: isImage2Layer2Visible,
+                      replacement: const SizedBox(
+                        height: double.infinity,
+                        width: double.infinity,
+                      ),
+                      child: Positioned(
+                        top: _top2,
+                        left: _left2,
+                        child: GestureDetector(
+                          onPanUpdate: (details) {
+                            _top2 = max(0, _top2 + details.delta.dy);
+                            _left2 = max(0, _left2 + details.delta.dx);
+                            setState(() {});
+                          },
+                          child: Image.file(_selectedImage2!),
+                        ),
+                      ),
+                    )
+                ],
+              ),
             )
           : const SizedBox(),
       floatingActionButton: Stack(children: [
@@ -137,16 +146,23 @@ class _MyArtboardState extends State<MyArtboard> {
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               ElevatedButton(
-                onPressed: () {
-                  setState(() {
-                    isFilePicked = false;
-                    _selectedImage1 = null;
-                    _top1 = 0;
-                    _left1 = 0;
-                    // isImage1OnTheTop = !isImage1OnTheTop;
-                  });
-                },
-                child: const Text("Hapus"),
+                onPressed: () => saveToGallery(context),
+                child: const Text("Simpan"),
+              ),
+              Container(
+                margin: const EdgeInsets.all(5),
+                child: ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      isFilePicked = false;
+                      _selectedImage1 = null;
+                      _top1 = 0;
+                      _left1 = 0;
+                      // isImage1OnTheTop = !isImage1OnTheTop;
+                    });
+                  },
+                  child: const Text("Hapus"),
+                ),
               ),
               ElevatedButton(
                 onPressed: () {
@@ -158,6 +174,40 @@ class _MyArtboardState extends State<MyArtboard> {
           ),
       ]),
     );
+  }
+
+  saveToGallery(BuildContext context) {
+    screenshotController.capture().then((Uint8List? image) {
+      saveImage(image!);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Berhasil disimpan!"),
+        ),
+      );
+      // ignore: invalid_return_type_for_catch_error, avoid_print
+    }).catchError((err) => print(err));
+  }
+
+  saveImage(Uint8List bytes) async {
+    final time = DateTime.now()
+        .toIso8601String()
+        .replaceAll('.', '-')
+        .replaceAll(';', '-');
+    final name = "screenshot_$time";
+    await requestPermission(Permission.storage);
+    await ImageGallerySaver.saveImage(bytes, name: name);
+  }
+
+  Future<bool> requestPermission(Permission permission) async {
+    if (await permission.isGranted) {
+      return true;
+    } else {
+      var result = await permission.request();
+      if (result == PermissionStatus.granted) {
+        return true;
+      }
+    }
+    return false;
   }
 
   Future _pickImageFromGallery1() async {
@@ -179,123 +229,3 @@ class _MyArtboardState extends State<MyArtboard> {
     });
   }
 }
-
-
-      // body: Center(
-      //   child: Stack(
-      //     children: [
-      //       if (moveForward == 0)
-      //         Positioned(
-      //           // key: const ValueKey(1),
-      //           top: _topA,
-      //           left: _leftA,
-      //           child: GestureDetector(
-      //               onLongPress: () {
-      //                 _isMovingB = true;
-      //                 _isMovingA =
-      //                     false; // Pastikan foto pertama tidak sedang dipindahkan
-      //                 // Geser widget kedua ke atas widget pertama dalam Stack
-      //                 final tempTop = _topA;
-      //                 final tempLeft = _leftA;
-      //                 _topA = _top;
-      //                 _leftA = _left;
-      //                 _top = tempTop;
-      //                 _left = tempLeft;
-      //                 setState(() {});
-      //               },
-      //               onPanUpdate: (details) {
-      //                 _topA = max(0, _topA + details.delta.dy);
-      //                 _leftA = max(0, _leftA + details.delta.dx);
-      //                 setState(() {});
-      //               },
-      //               child: Image.asset(
-      //                 urlImage2,
-      //                 scale: 5,
-      //                 fit: BoxFit.cover,
-      //               )),
-      //         ),
-      //       // Positioned(
-      //       //   // key: const ValueKey(2),
-      //       //   top: _top,
-      //       //   left: _left,
-      //       //   child: GestureDetector(
-      //       //     onLongPress: () {
-      //       //       _isMovingA = true;
-      //       //       _isMovingB =
-      //       //           false; // Pastikan foto kedua tidak sedang dipindahkan
-      //       //       // Geser widget pertama ke atas widget kedua dalam Stack
-      //       //       final tempTop = _top;
-      //       //       final tempLeft = _left;
-      //       //       _top = _topA;
-      //       //       _left = _leftA;
-      //       //       _topA = tempTop;
-      //       //       _leftA = tempLeft;
-      //       //       setState(() {});
-      //       //     },
-      //       //     onPanUpdate: (details) {
-      //       //       _top = max(0, _top + details.delta.dy);
-      //       //       _left = max(0, _left + details.delta.dx);
-      //       //       setState(() {});
-      //       //     },
-      //       //     child: Image.asset(urlImage1, scale: 5, fit: BoxFit.cover),
-      //       //   ),
-      //       // ),
-      //       if (moveForward == 1)
-      //         Positioned(
-      //           // key: const ValueKey(2),
-      //           top: _top,
-      //           left: _left,
-      //           child: GestureDetector(
-      //             onLongPress: () {
-      //               _isMovingA = true;
-      //               _isMovingB =
-      //                   false; // Pastikan foto kedua tidak sedang dipindahkan
-      //               // Geser widget pertama ke atas widget kedua dalam Stack
-      //               final tempTop = _top;
-      //               final tempLeft = _left;
-      //               _top = _topA;
-      //               _left = _leftA;
-      //               _topA = tempTop;
-      //               _leftA = tempLeft;
-      //               setState(() {});
-      //             },
-      //             onPanUpdate: (details) {
-      //               _top = max(0, _top + details.delta.dy);
-      //               _left = max(0, _left + details.delta.dx);
-      //               setState(() {});
-      //             },
-      //             child: Image.asset(urlImage1, scale: 5, fit: BoxFit.cover),
-      //           ),
-      //         ),
-      //       // Positioned(
-      //       //   // key: const ValueKey(1),
-      //       //   top: _topA,
-      //       //   left: _leftA,
-      //       //   child: GestureDetector(
-      //       //       onLongPress: () {
-      //       //         _isMovingB = true;
-      //       //         _isMovingA =
-      //       //             false; // Pastikan foto pertama tidak sedang dipindahkan
-      //       //         // Geser widget kedua ke atas widget pertama dalam Stack
-      //       //         final tempTop = _topA;
-      //       //         final tempLeft = _leftA;
-      //       //         _topA = _top;
-      //       //         _leftA = _left;
-      //       //         _top = tempTop;
-      //       //         _left = tempLeft;
-      //       //         setState(() {});
-      //       //       },
-      //       //       onPanUpdate: (details) {
-      //       //         _topA = max(0, _topA + details.delta.dy);
-      //       //         _leftA = max(0, _leftA + details.delta.dx);
-      //       //         setState(() {});
-      //       //       },
-      //       //       child: Image.asset(
-      //       //         urlImage2,
-      //       //         scale: 5,
-      //       //         fit: BoxFit.cover,
-      //       //       )),
-      //       // ),
-      //     ],
-      //   ),
-      // ),
