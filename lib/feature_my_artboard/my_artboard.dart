@@ -18,19 +18,63 @@ class MyArtboard extends StatefulWidget {
 class _MyArtboardState extends State<MyArtboard> {
   ScreenshotController screenshotController = ScreenshotController();
 
+  // TODO: Buat 5 gambar yang bisa diimport.
+  // TODO: Pindah layer dengan onLongPress.
+  // TODO: scaling gambar dengan gesture detection.
   File? _selectedImage1;
   File? _selectedImage2;
+  File? _selectedImage3;
+  File? _selectedImage4;
+  File? _selectedImage5;
 
+  // for onPanUpdate function to 5 image
   double _top1 = 0;
   double _left1 = 0;
   double _top2 = 0;
   double _left2 = 0;
+  double _top3 = 0;
+  double _left3 = 0;
+  double _top4 = 0;
+  double _left4 = 0;
+  double _top5 = 0;
+  double _left5 = 0;
 
   bool isFilePicked = false;
-  bool isImage1Layer1Visible = true;
-  bool isImage2Layer1Visible = true;
-  bool isImage1Layer2Visible = true;
-  bool isImage2Layer2Visible = true;
+  // A = layer1
+  bool isImage1AVisible = true;
+  bool isImage2AVisible = true;
+  bool isImage3AVisible = true;
+  bool isImage4AVisible = true;
+  bool isImage5AVisible = true;
+  // B = layer2
+  bool isImage1BVisible = true;
+  bool isImage2BVisible = true;
+  bool isImage3BVisible = true;
+  bool isImage4BVisible = true;
+  bool isImage5BVisible = true;
+  // C = layer3
+  bool isImage1CVisible = true;
+  bool isImage2CVisible = true;
+  bool isImage3CVisible = true;
+  bool isImage4CVisible = true;
+  bool isImage5CVisible = true;
+  // D = layer4
+  bool isImage1DVisible = true;
+  bool isImage2DVisible = true;
+  bool isImage3DVisible = true;
+  bool isImage4DVisible = true;
+  bool isImage5DVisible = true;
+  // E = layer5
+  bool isImage1EVisible = true;
+  bool isImage2EVisible = true;
+  bool isImage3EVisible = true;
+  bool isImage4EVisible = true;
+  bool isImage5EVisible = true;
+  // bool for visible button
+  bool isImage2Existed = true;
+  bool isImage3Existed = true;
+  bool isImage4Existed = true;
+  bool isImage5Existed = true;
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +89,7 @@ class _MyArtboardState extends State<MyArtboard> {
               child: Screenshot(
                 controller: screenshotController,
                 child: Container(
-                  color: Color.fromARGB(255, 255, 255, 255),
+                  color: const Color.fromARGB(255, 255, 255, 255),
                   height: 620,
                   width: 375,
                   margin: const EdgeInsets.only(bottom: 65),
@@ -53,7 +97,7 @@ class _MyArtboardState extends State<MyArtboard> {
                     clipBehavior: Clip.antiAliasWithSaveLayer,
                     children: [
                       Visibility(
-                        visible: isImage1Layer1Visible,
+                        visible: isImage1AVisible,
                         replacement: const SizedBox(
                           height: double.infinity,
                           width: double.infinity,
@@ -73,7 +117,7 @@ class _MyArtboardState extends State<MyArtboard> {
                       ),
                       if (_selectedImage2 != null)
                         Visibility(
-                          visible: isImage2Layer1Visible,
+                          visible: isImage2AVisible,
                           replacement: const SizedBox(
                             height: double.infinity,
                             width: double.infinity,
@@ -91,9 +135,10 @@ class _MyArtboardState extends State<MyArtboard> {
                             ),
                           ),
                         ),
+                      // TODO: tambahkan gambar 3,4, dan 5 A.
                       if (_selectedImage2 != null)
                         Visibility(
-                          visible: isImage1Layer2Visible,
+                          visible: isImage1BVisible,
                           replacement: const SizedBox(
                             height: double.infinity,
                             width: double.infinity,
@@ -113,7 +158,7 @@ class _MyArtboardState extends State<MyArtboard> {
                         ),
                       if (_selectedImage2 != null)
                         Visibility(
-                          visible: true,
+                          visible: isImage2BVisible,
                           replacement: const SizedBox(
                             height: double.infinity,
                             width: double.infinity,
@@ -131,6 +176,10 @@ class _MyArtboardState extends State<MyArtboard> {
                             ),
                           ),
                         )
+                      // TODO: tambahkan gambar 3,4, dan 5 B.
+                      // TODO: tambahkan gambar 1,2,3,4, dan 5 C.
+                      // TODO: tambahkan gambar 1,2,3,4, dan 5 D.
+                      // TODO: tambahkan gambar 1,2,3,4, dan 5 E.
                     ],
                   ),
                 ),
@@ -177,16 +226,58 @@ class _MyArtboardState extends State<MyArtboard> {
                 ),
               ),
             if (_selectedImage1 != null)
-              ElevatedButton(
-                onPressed: () {
-                  _pickImageFromGallery2();
-                },
-                child: const Text("Impor gambar 2"),
+              Visibility(
+                visible: isImage2Existed,
+                child: ElevatedButton(
+                  onPressed: () {
+                    _pickImageFromGallery2();
+                    setState(() {
+                      isImage2Existed = false;
+                    });
+                  },
+                  child: const Text("Impor gambar 2"),
+                ),
+              ),
+            if (_selectedImage2 != null)
+              Visibility(
+                visible: isImage3Existed,
+                child: ElevatedButton(
+                  onPressed: () {
+                    _pickImageFromGallery3();
+                    setState(() {
+                      isImage3Existed = false;
+                    });
+                  },
+                  child: const Text("Impor gambar 3"),
+                ),
+              ),
+            if (_selectedImage3 != null)
+              Visibility(
+                visible: isImage4Existed,
+                child: ElevatedButton(
+                  onPressed: () {
+                    _pickImageFromGallery4();
+                    setState(() {
+                      isImage4Existed = false;
+                    });
+                  },
+                  child: const Text("Impor gambar 4"),
+                ),
+              ),
+            if (_selectedImage4 != null)
+              Visibility(
+                visible: isImage5Existed,
+                child: ElevatedButton(
+                  onPressed: () {
+                    _pickImageFromGallery5();
+                  },
+                  child: const Text("Impor gambar 5"),
+                ),
               ),
           ],
         ),
       ]),
-      backgroundColor: Color.fromARGB(218, 255, 255, 255),
+      backgroundColor: const Color.fromARGB(218, 255, 255, 255),
     );
   }
 
@@ -240,6 +331,33 @@ class _MyArtboardState extends State<MyArtboard> {
     if (returnedImage == null) return;
     setState(() {
       _selectedImage2 = File(returnedImage.path);
+    });
+  }
+
+  Future _pickImageFromGallery3() async {
+    final returnedImage =
+        await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (returnedImage == null) return;
+    setState(() {
+      _selectedImage3 = File(returnedImage.path);
+    });
+  }
+
+  Future _pickImageFromGallery4() async {
+    final returnedImage =
+        await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (returnedImage == null) return;
+    setState(() {
+      _selectedImage4 = File(returnedImage.path);
+    });
+  }
+
+  Future _pickImageFromGallery5() async {
+    final returnedImage =
+        await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (returnedImage == null) return;
+    setState(() {
+      _selectedImage5 = File(returnedImage.path);
     });
   }
 }
