@@ -47,34 +47,113 @@ class _MyArtboardState extends State<MyArtboard> {
   bool isImage4AVisible = true;
   bool isImage5AVisible = true;
   // B = layer2
-  bool isImage1BVisible = true;
-  bool isImage2BVisible = true;
-  bool isImage3BVisible = true;
-  bool isImage4BVisible = true;
-  bool isImage5BVisible = true;
+  bool isImage1BVisible = false;
+  bool isImage2BVisible = false;
+  bool isImage3BVisible = false;
+  bool isImage4BVisible = false;
+  bool isImage5BVisible = false;
   // C = layer3
-  bool isImage1CVisible = true;
-  bool isImage2CVisible = true;
-  bool isImage3CVisible = true;
-  bool isImage4CVisible = true;
-  bool isImage5CVisible = true;
+  bool isImage1CVisible = false;
+  bool isImage2CVisible = false;
+  bool isImage3CVisible = false;
+  bool isImage4CVisible = false;
+  bool isImage5CVisible = false;
   // D = layer4
-  bool isImage1DVisible = true;
-  bool isImage2DVisible = true;
-  bool isImage3DVisible = true;
-  bool isImage4DVisible = true;
-  bool isImage5DVisible = true;
+  bool isImage1DVisible = false;
+  bool isImage2DVisible = false;
+  bool isImage3DVisible = false;
+  bool isImage4DVisible = false;
+  bool isImage5DVisible = false;
   // E = layer5
-  bool isImage1EVisible = true;
-  bool isImage2EVisible = true;
-  bool isImage3EVisible = true;
-  bool isImage4EVisible = true;
-  bool isImage5EVisible = true;
+  bool isImage1EVisible = false;
+  bool isImage2EVisible = false;
+  bool isImage3EVisible = false;
+  bool isImage4EVisible = false;
+  bool isImage5EVisible = false;
   // bool for visible button
   bool isImage2Existed = true;
   bool isImage3Existed = true;
   bool isImage4Existed = true;
   bool isImage5Existed = true;
+
+  // start of pop up menu
+  Offset _tapPosition = Offset.zero;
+
+  void _getTapPosition(TapDownDetails tapPostion) {
+    final RenderBox renderBox = context.findRenderObject() as RenderBox;
+    setState(() {
+      _tapPosition = renderBox.globalToLocal(tapPostion.globalPosition);
+      print(_tapPosition);
+    });
+  }
+
+  void _showContextMenu(context) async {
+    final RenderObject? overlay =
+        Overlay.of(context).context.findRenderObject();
+    // ignore: unused_local_variable
+    final result = await showMenu(
+        context: context,
+        position: RelativeRect.fromRect(
+          Rect.fromLTWH(_tapPosition.dx, _tapPosition.dy, 10, 10),
+          Rect.fromLTWH(0, 0, overlay!.paintBounds.size.width,
+              overlay.paintBounds.size.height),
+        ),
+        items: [
+          PopupMenuItem(
+            child: const Text("Bawa Maju"),
+            onTap: () {
+              setState(() {});
+            },
+          ),
+          PopupMenuItem(
+            child: const Text("Bawa Mundur"),
+            onTap: () {
+              setState(() {});
+            },
+          ),
+        ]);
+  }
+
+  void _showContextMenu1A(context) async {
+    final RenderObject? overlay =
+        Overlay.of(context).context.findRenderObject();
+    // ignore: unused_local_variable
+    final result = await showMenu(
+        context: context,
+        position: RelativeRect.fromRect(
+          Rect.fromLTWH(_tapPosition.dx, _tapPosition.dy, 10, 10),
+          Rect.fromLTWH(0, 0, overlay!.paintBounds.size.width,
+              overlay.paintBounds.size.height),
+        ),
+        items: [
+          PopupMenuItem(
+            child: const Text("Bawa Maju"),
+            onTap: () {
+              setState(() {
+                isImage1AVisible = false;
+                isImage2AVisible = true;
+                isImage3AVisible = true;
+                isImage4AVisible = true;
+                isImage5AVisible = true;
+
+                // B = layer2
+                isImage1BVisible = true;
+                isImage2BVisible = false;
+                isImage3BVisible = true;
+                isImage4BVisible = true;
+                isImage5BVisible = true;
+              });
+            },
+          ),
+          PopupMenuItem(
+            child: const Text("Bawa Mundur"),
+            onTap: () {
+              setState(() {});
+            },
+          ),
+        ]);
+  }
+  // end of pop up menu
 
   @override
   Widget build(BuildContext context) {
@@ -97,7 +176,7 @@ class _MyArtboardState extends State<MyArtboard> {
                     children: [
                       // gambar 1,2,3,4, dan 5 A.
                       Visibility(
-                        visible: isImage1AVisible,
+                        visible: true,
                         replacement: const SizedBox(
                           height: double.infinity,
                           width: double.infinity,
@@ -106,6 +185,12 @@ class _MyArtboardState extends State<MyArtboard> {
                           top: _top1,
                           left: _left1,
                           child: GestureDetector(
+                            onTapDown: (position) {
+                              _getTapPosition(position);
+                            },
+                            onLongPress: () {
+                              _showContextMenu1A(context);
+                            },
                             onPanUpdate: (details) {
                               _top1 = max(0, _top1 + details.delta.dy);
                               _left1 = max(0, _left1 + details.delta.dx);
@@ -126,6 +211,12 @@ class _MyArtboardState extends State<MyArtboard> {
                             top: _top2,
                             left: _left2,
                             child: GestureDetector(
+                              onTapDown: (position) {
+                                _getTapPosition(position);
+                              },
+                              onLongPress: () {
+                                _showContextMenu(context);
+                              },
                               onPanUpdate: (details) {
                                 _top2 = max(0, _top2 + details.delta.dy);
                                 _left2 = max(0, _left2 + details.delta.dx);
@@ -146,6 +237,12 @@ class _MyArtboardState extends State<MyArtboard> {
                             top: _top3,
                             left: _left3,
                             child: GestureDetector(
+                              onTapDown: (position) {
+                                _getTapPosition(position);
+                              },
+                              onLongPress: () {
+                                _showContextMenu(context);
+                              },
                               onPanUpdate: (details) {
                                 _top3 = max(0, _top3 + details.delta.dy);
                                 _left3 = max(0, _left3 + details.delta.dx);
@@ -166,6 +263,12 @@ class _MyArtboardState extends State<MyArtboard> {
                             top: _top4,
                             left: _left4,
                             child: GestureDetector(
+                              onTapDown: (position) {
+                                _getTapPosition(position);
+                              },
+                              onLongPress: () {
+                                _showContextMenu(context);
+                              },
                               onPanUpdate: (details) {
                                 _top4 = max(0, _top4 + details.delta.dy);
                                 _left4 = max(0, _left4 + details.delta.dx);
@@ -186,6 +289,12 @@ class _MyArtboardState extends State<MyArtboard> {
                             top: _top5,
                             left: _left5,
                             child: GestureDetector(
+                              onTapDown: (position) {
+                                _getTapPosition(position);
+                              },
+                              onLongPress: () {
+                                _showContextMenu(context);
+                              },
                               onPanUpdate: (details) {
                                 _top5 = max(0, _top5 + details.delta.dy);
                                 _left5 = max(0, _left5 + details.delta.dx);
@@ -590,6 +699,12 @@ class _MyArtboardState extends State<MyArtboard> {
                             top: _top5,
                             left: _left5,
                             child: GestureDetector(
+                              onTapDown: (position) {
+                                _getTapPosition(position);
+                              },
+                              onLongPress: () {
+                                _showContextMenu(context);
+                              },
                               onPanUpdate: (details) {
                                 _top5 = max(0, _top5 + details.delta.dy);
                                 _left5 = max(0, _left5 + details.delta.dx);
